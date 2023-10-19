@@ -10,7 +10,7 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class WeatherController extends AbstractController
 {
-    #[Route('/weather/{id}', name: 'app_weather', requirements: ['id' => '\d+'])] // id must be a number (\d+)
+    #[Route('/weather/{name}', name: 'app_weather')] // id must be a number (\d+)
     public function city(Location $location, WeatherForecastRepository $repository): Response
     {
         $forecasts = $repository->findByLocation($location);
