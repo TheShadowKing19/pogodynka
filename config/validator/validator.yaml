@@ -1,0 +1,30 @@
+App\Entity\Location:
+  properties:
+    longitude:
+      - Range:
+          min: -90
+          max: 90
+          groups: [ 'edit', 'create' ]
+    latitude:
+      - Range:
+          min: -180
+          max: 180
+          groups: [ 'edit', 'create' ]
+
+App\Entity\WeatherForecast:
+  properties:
+    humidity:
+      - Range:
+          min: 0
+          max: 100
+          groups: [ 'edit', 'create' ]
+    cloudiness:
+      - Range:
+          min: 0
+          max: 100
+          groups: [ 'edit', 'create' ]
+    air_quality:
+      - Range:
+          min: 0
+          max: 100
+          groups: [ 'edit', 'create' ]
