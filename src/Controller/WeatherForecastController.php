@@ -10,11 +10,13 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 #[Route('/weather/forecast')]
 class WeatherForecastController extends AbstractController
 {
     #[Route('/', name: 'app_weather_forecast_index', methods: ['GET'])]
+    #[IsGranted('ROLE_WEATHER_FORECAST_INDEX')]
     public function index(WeatherForecastRepository $weatherForecastRepository): Response
     {
         return $this->render('weather_forecast/index.html.twig', [
@@ -23,6 +25,7 @@ class WeatherForecastController extends AbstractController
     }
 
     #[Route('/new', name: 'app_weather_forecast_new', methods: ['GET', 'POST'])]
+    #[IsGranted('ROLE_WEATHER_FORECAST_NEW')]
     public function new(Request $request, EntityManagerInterface $entityManager): Response
     {
         $weatherForecast = new WeatherForecast();
@@ -45,6 +48,7 @@ class WeatherForecastController extends AbstractController
     }
 
     #[Route('/{id}', name: 'app_weather_forecast_show', methods: ['GET'])]
+    #[IsGranted('ROLE_WEATHER_FORECAST_SHOW')]
     public function show(WeatherForecast $weatherForecast): Response
     {
         return $this->render('weather_forecast/show.html.twig', [
@@ -53,6 +57,7 @@ class WeatherForecastController extends AbstractController
     }
 
     #[Route('/{id}/edit', name: 'app_weather_forecast_edit', methods: ['GET', 'POST'])]
+    #[IsGranted('ROLE_WEATHER_FORECAST_EDIT')]
     public function edit(Request $request, WeatherForecast $weatherForecast, EntityManagerInterface $entityManager): Response
     {
         $form = $this->createForm(WeatherForecastType::class, $weatherForecast, [
@@ -73,6 +78,7 @@ class WeatherForecastController extends AbstractController
     }
 
     #[Route('/{id}', name: 'app_weather_forecast_delete', methods: ['POST'])]
+    #[IsGranted('ROLE_WEATHER_FORECAST_DELETE')]
     public function delete(Request $request, WeatherForecast $weatherForecast, EntityManagerInterface $entityManager): Response
     {
         if ($this->isCsrfTokenValid('delete'.$weatherForecast->getId(), $request->request->get('_token'))) {
