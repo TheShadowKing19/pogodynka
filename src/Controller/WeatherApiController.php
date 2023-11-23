@@ -28,13 +28,14 @@ class WeatherApiController extends AbstractController
             case 'json':
                 if ($twig):
                     return $this->render('weather_api/index.json.twig', [
-                        'data' => $this->json(
+                        'data' => json_encode(
                             [
                                 'city' => $city,
                                 'country' => $country,
                                 'forecasts' => array_map(fn(WeatherForecast $f) => [
                                     'date' => $f->getDate()->format('Y-m-d'),
                                     'celsius' => $f->getTemperature(),
+                                    'fahrenheit' => $f->getFahrenheit(),
                                 ], $forecasts),
                             ]
                         ),
@@ -46,6 +47,7 @@ class WeatherApiController extends AbstractController
                         'forecasts' => array_map(fn(WeatherForecast $f) => [
                             'date' => $f->getDate()->format('Y-m-d'),
                             'celsius' => $f->getTemperature(),
+                            'fahrenheit' => $f->getFahrenheit(),
                         ], $forecasts),
                     ]);
                     break;
@@ -55,7 +57,11 @@ class WeatherApiController extends AbstractController
                     return $this->render('weather_api/index.csv.twig', [
                         'city' => $city,
                         'country' => $country,
-                        'forecasts' => $forecasts,
+                        'forecasts' => array_map(fn(WeatherForecast $f) => [
+                            'date' => $f->getDate()->format('Y-m-d'),
+                            'celsius' => $f->getTemperature(),
+                            'fahrenheit' => $f->getFahrenheit(),
+                        ], $forecasts),
                     ]);
                 else:
                     $response = new Response();
@@ -63,11 +69,12 @@ class WeatherApiController extends AbstractController
                     $response->headers->set('Content-Disposition', 'attachment; filename="weather.csv"');
                     $response->setContent("city,country,date,celsius\n" .
                         implode("\n", array_map(fn(WeatherForecast $f) => sprintf(
-                            '%s,%s,%s,%d',
+                            '%s,%s,%s,%d,%s',
                             $city,
                             $country,
-                            $f->getDate()->format('Y-m-d')
-                            ,$f->getTemperature()
+                            $f->getDate()->format('Y-m-d'),
+                            $f->getTemperature(),
+                            $f->getFahrenheit(),
                         ), $forecasts)));
                     return $response;
                     break;

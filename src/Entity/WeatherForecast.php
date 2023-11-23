@@ -154,4 +154,9 @@ class WeatherForecast
 
         return $this;
     }
+
+    public function getFahrenheit(): float
+    {
+        return $this->getTemperature() * 9 / 5 + 32;
+    }
 }
